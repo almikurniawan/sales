@@ -640,94 +640,96 @@ class _MenuState extends State<Menu> {
                 context, MaterialPageRoute(builder: (context) => Notif()));
           },
         ),
-        Container(
-            color: Color(0xFFF8FCFF),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 40,
-                      ),
-                      Text(
-                        "History Scan",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        width: 40,
-                      )
-                    ],
+        Expanded(
+          child: Container(
+              color: Color(0xFFF8FCFF),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 40,
+                        ),
+                        Text(
+                          "History Scan",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          width: 40,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                SingleChildScrollView(
-                  child: Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return HistoryDetail();
-                        }));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            left: 40, right: 40, top: 10, bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                  child: FittedBox(
-                                    child: Text("CRT"),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return HistoryDetail();
+                          }));
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(
+                              left: 40, right: 40, top: 10, bottom: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    child: FittedBox(
+                                      child: Text("CRT"),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Toko Suryana",
-                                  style: TextStyle(
-                                      color: Color(0xFFFD0000), fontSize: 16),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Text("07.00",
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Toko Suryana",
                                     style: TextStyle(
-                                        color: Color(0xFFF43DF3F),
-                                        fontSize: 12)),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Icon(Icons.forward),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  "08-20-2021",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 12),
-                                )
-                              ],
-                            )
-                          ],
+                                        color: Color(0xFFFD0000), fontSize: 16),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text("07.00",
+                                      style: TextStyle(
+                                          color: Color(0xFFF43DF3F),
+                                          fontSize: 12)),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Icon(Icons.forward),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "08-20-2021",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 12),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
-            )),
+                  )
+                ],
+              )),
+        ),
       ],
     );
   }
