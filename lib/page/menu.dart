@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sales/component/custom_appbar.dart';
+import 'package:sales/component/header_menu.dart';
 import 'package:sales/page/pos_page.dart';
 import 'package:sales/page/product_page.dart';
 import 'package:sales/page/store_list_page.dart';
+import 'package:sales/page/history_detail.dart';
 import 'notif.dart';
 
 class Menu extends StatefulWidget {
@@ -23,14 +25,262 @@ class _MenuState extends State<Menu> {
           body: TabBarView(
             children: [
               Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CustomAppBar(
-                    onNotificationClick: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Notif()));
-                    },
+                  Container(
+                    color: const Color(0xFFFF5C46),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        CustomAppBar(
+                          onNotificationClick: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Notif()));
+                          },
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 40, right: 40),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Today's Income ",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Text(
+                                    "Rp 2.000.000",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin: EdgeInsets.only(top: 10, bottom: 10),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    child: FittedBox(
+                                      child: Text("CRT"),
+                                    ),
+                                  ),
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10, bottom: 10),
+                                    child: Text(
+                                      "Average Income",
+                                      style: TextStyle(
+                                          color: Color(0xFFC4C4C4),
+                                          fontSize: 12),
+                                    ),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10, bottom: 10),
+                                    child: Text("Rp 18.440.000",
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 12)),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.more_horiz),
+                                    onPressed: () => {},
+                                  ),
+                                ),
+                              ),
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin: EdgeInsets.only(top: 10, bottom: 20),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    child: FittedBox(
+                                      child: Text("CRT"),
+                                    ),
+                                  ),
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10, bottom: 10),
+                                    child: Text(
+                                      "Average Income",
+                                      style: TextStyle(
+                                          color: Color(0xFFC4C4C4),
+                                          fontSize: 12),
+                                    ),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10, bottom: 10),
+                                    child: Text("Rp 18.440.000",
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 12)),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.more_horiz),
+                                    onPressed: () => {},
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Message Unread (21)",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                              Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  margin: EdgeInsets.only(top: 20, bottom: 20),
+                                  child: ListTile(
+                                    title: Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        "Order #4421 Has Been Sent To the buyer",
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 12),
+                                      ),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        "31 Minutes Ago",
+                                        style: TextStyle(
+                                            color: Color(0xFFC4C4C4),
+                                            fontSize: 10),
+                                      ),
+                                    ),
+                                    trailing: Icon(Icons.more_horiz),
+                                  ))
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  Container(child: Icon(Icons.home_outlined)),
+                  SingleChildScrollView(
+                    child: Container(
+                      color: Color(0xFFF8FCFF),
+                      padding: EdgeInsets.only(
+                          top: 20, bottom: 20, left: 40, right: 40),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Statistics",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "More",
+                                  style: TextStyle(
+                                      color: Color(0xFFC4C4C4), fontSize: 12),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "Orders",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.trending_up,
+                                              color: Color(0xFF059DF1),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "44,216",
+                                          style: TextStyle(
+                                              color: Color(0xFF059DF1),
+                                              fontSize: 12),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              Expanded(
+                                child: Card(
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "Return",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.trending_down,
+                                              color: Color(0xFFFD0000),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "23,124",
+                                          style: TextStyle(
+                                              color: Color(0xFFFD0000),
+                                              fontSize: 12),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
               Column(
@@ -101,17 +351,7 @@ class _MenuState extends State<Menu> {
                   ),
                 ],
               ),
-              Column(
-                children: [
-                  CustomAppBar(
-                    onNotificationClick: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Notif()));
-                    },
-                  ),
-                  Container(child: Icon(Icons.history_toggle_off)),
-                ],
-              ),
+              TabHistory(context),
               Stack(
                 children: [
                   Container(
@@ -357,6 +597,107 @@ class _MenuState extends State<Menu> {
             ],
           ),
           bottomNavigationBar: BuildMenu()),
+    );
+  }
+
+  Column TabHistory(BuildContext context) {
+    return Column(
+      children: [
+        CustomAppBar(
+          onNotificationClick: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Notif()));
+          },
+        ),
+        Container(
+            color: Color(0xFFF8FCFF),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 40,
+                      ),
+                      Text(
+                        "History Scan",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        width: 40,
+                      )
+                    ],
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return HistoryDetail();
+                        }));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                            left: 40, right: 40, top: 10, bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  child: FittedBox(
+                                    child: Text("CRT"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Toko Suryana",
+                                  style: TextStyle(
+                                      color: Color(0xFFFD0000), fontSize: 16),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text("07.00",
+                                    style: TextStyle(
+                                        color: Color(0xFFF43DF3F),
+                                        fontSize: 12)),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Icon(Icons.forward),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  "08-20-2021",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 12),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )),
+      ],
     );
   }
 

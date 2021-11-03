@@ -158,25 +158,25 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 13),
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.white),
-                      ),
-                      onPressed: () {},
-                      child: Container(
-                        // width: MediaQuery.of(context).size.width * 0.8,
-                        // height: MediaQuery.of(context).size.height * 0.06,
-                        child: Center(
-                          child: Text(
-                            'Sign Up',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 13),
+                  //   child: OutlinedButton(
+                  //     style: OutlinedButton.styleFrom(
+                  //       side: BorderSide(color: Colors.white),
+                  //     ),
+                  //     onPressed: () {},
+                  //     child: Container(
+                  //       // width: MediaQuery.of(context).size.width * 0.8,
+                  //       // height: MediaQuery.of(context).size.height * 0.06,
+                  //       child: Center(
+                  //         child: Text(
+                  //           'Sign Up',
+                  //           style: TextStyle(fontSize: 16, color: Colors.white),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               )),
         ),
