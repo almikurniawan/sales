@@ -33,6 +33,26 @@ class _PosPageState extends State<PosPage> {
       "harga" : 15000,
       "jumlah" : 3
     });
+    itemPos.add({
+      "id" : "#1226",
+      "harga" : 15000,
+      "jumlah" : 3
+    });
+    itemPos.add({
+      "id" : "#1226",
+      "harga" : 15000,
+      "jumlah" : 3
+    });
+    itemPos.add({
+      "id" : "#1226",
+      "harga" : 15000,
+      "jumlah" : 3
+    });
+    itemPos.add({
+      "id" : "#1226",
+      "harga" : 15000,
+      "jumlah" : 3
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -70,36 +90,39 @@ class _PosPageState extends State<PosPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      MediaQuery.removePadding(
-                        removeTop: true,
-                        removeBottom: true,
-                        context: context,
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: itemPos.length,
-                            itemBuilder: (_, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: PosCard(item: itemPos[index], 
-                                onRemove: (){
-                                  itemPos.removeAt(index);
-                                  setState(() {
-                                  });
-                                }, 
-                                onMin: (){
-                                  itemPos[index]['jumlah']--;
-                                  setState(() {
-                                  });
-                                },
-                                onPlus: (){
-                                  itemPos[index]['jumlah']++;
-                                  setState(() {
-                                  });
-                                },
-                              )
-                              );
-                            }),
+                      Container(
+                        height: 400,
+                        child: MediaQuery.removePadding(
+                          removeTop: true,
+                          removeBottom: true,
+                          context: context,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: itemPos.length,
+                              itemBuilder: (_, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: PosCard(item: itemPos[index], 
+                                  onRemove: (){
+                                    itemPos.removeAt(index);
+                                    setState(() {
+                                    });
+                                  }, 
+                                  onMin: (){
+                                    itemPos[index]['jumlah']--;
+                                    setState(() {
+                                    });
+                                  },
+                                  onPlus: (){
+                                    itemPos[index]['jumlah']++;
+                                    setState(() {
+                                    });
+                                  },
+                                )
+                                );
+                              }),
+                        ),
                       ),
                       SizedBox(
                         height: 20,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter/services.dart';
 import 'package:sales/component/custom_appbar.dart';
 import 'package:sales/component/header_menu.dart';
 import 'package:sales/page/pos_page.dart';
@@ -17,6 +19,29 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   double getDiamater(BuildContext context) =>
       MediaQuery.of(context).size.width * 2 / 4;
+
+  String? _scanBarcode;
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -291,61 +316,67 @@ class _MenuState extends State<Menu> {
                           MaterialPageRoute(builder: (context) => Notif()));
                     },
                   ),
-                  SingleChildScrollView(
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              "Menu My Sales",
-                              style: TextStyle(fontSize: 26),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Text(
+                                "Menu My Sales",
+                                style: TextStyle(fontSize: 26),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return ProductPage();
-                                }));
-                              },
-                              child: BuildCard(
-                                  Icons.check_box_outline_blank, "Product"),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: GestureDetector(
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return PosPage();
-                                  }));
-                                },
-                                child: BuildCard(Icons.edit_outlined, "POS")),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return StoreListPage();
+                                    return ProductPage();
                                   }));
                                 },
                                 child: BuildCard(
-                                    Icons.shopping_bag_outlined, "Store")),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: BuildCard(Icons.qr_code_2_outlined, "Scan"),
-                          ),
-                        ],
+                                    Icons.check_box_outline_blank, "Product"),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return PosPage();
+                                    }));
+                                  },
+                                  child: BuildCard(Icons.edit_outlined, "POS")),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return StoreListPage();
+                                    }));
+                                  },
+                                  child: BuildCard(
+                                      Icons.shopping_bag_outlined, "Store")),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: GestureDetector(
+                                onTap: (){
+                                  scanBarcodeNormal();
+                                },
+                                child: BuildCard(Icons.qr_code_2_outlined, "Scan")),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -41,68 +41,108 @@ class _StorePageState extends State<StorePage> {
                   height: 20,
                 ),
                 Text("Nama Toko"),
+                SizedBox(
+                  height: 5,
+                ),
                 TextField(
                   decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                     fillColor: Colors.white,
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
+                                      filled: true,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 16),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text("Pemilik Toko"),
+                SizedBox(
+                  height: 5,
+                ),
                 TextField(
                   decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                     fillColor: Colors.white,
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
+                                      filled: true,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 16),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text("No. Telp"),
+                SizedBox(
+                  height: 5,
+                ),
                 TextField(
                   decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                     fillColor: Colors.white,
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
+                                      filled: true,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 16),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text("Alamat"),
+                SizedBox(
+                  height: 5,
+                ),
                 TextField(
                   decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                     fillColor: Colors.white,
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
+                                      filled: true,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(6),
+                                        borderSide: BorderSide(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 16),
                   ),
                 ),
                 SizedBox(height: 15),
