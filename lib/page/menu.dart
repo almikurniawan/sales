@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter/services.dart';
 import 'package:sales/component/custom_appbar.dart';
 import 'package:sales/component/header_menu.dart';
 import 'package:sales/page/pos_page.dart';
@@ -17,6 +19,29 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   double getDiamater(BuildContext context) =>
       MediaQuery.of(context).size.width * 2 / 4;
+
+  String? _scanBarcode;
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -291,61 +316,67 @@ class _MenuState extends State<Menu> {
                           MaterialPageRoute(builder: (context) => Notif()));
                     },
                   ),
-                  SingleChildScrollView(
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              "Menu My Sales",
-                              style: TextStyle(fontSize: 26),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Text(
+                                "Menu My Sales",
+                                style: TextStyle(fontSize: 26),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return ProductPage();
-                                }));
-                              },
-                              child: BuildCard(
-                                  Icons.check_box_outline_blank, "Product"),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: GestureDetector(
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return PosPage();
-                                  }));
-                                },
-                                child: BuildCard(Icons.edit_outlined, "POS")),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return StoreListPage();
+                                    return ProductPage();
                                   }));
                                 },
                                 child: BuildCard(
-                                    Icons.shopping_bag_outlined, "Store")),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: BuildCard(Icons.qr_code_2_outlined, "Scan"),
-                          ),
-                        ],
+                                    Icons.check_box_outline_blank, "Product"),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return PosPage();
+                                    }));
+                                  },
+                                  child: BuildCard(Icons.edit_outlined, "POS")),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return StoreListPage();
+                                    }));
+                                  },
+                                  child: BuildCard(
+                                      Icons.shopping_bag_outlined, "Store")),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: GestureDetector(
+                                onTap: (){
+                                  scanBarcodeNormal();
+                                },
+                                child: BuildCard(Icons.qr_code_2_outlined, "Scan")),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -609,94 +640,96 @@ class _MenuState extends State<Menu> {
                 context, MaterialPageRoute(builder: (context) => Notif()));
           },
         ),
-        Container(
-            color: Color(0xFFF8FCFF),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 40,
-                      ),
-                      Text(
-                        "History Scan",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        width: 40,
-                      )
-                    ],
+        Expanded(
+          child: Container(
+              color: Color(0xFFF8FCFF),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 40,
+                        ),
+                        Text(
+                          "History Scan",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          width: 40,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                SingleChildScrollView(
-                  child: Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return HistoryDetail();
-                        }));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            left: 40, right: 40, top: 10, bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                  child: FittedBox(
-                                    child: Text("CRT"),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return HistoryDetail();
+                          }));
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(
+                              left: 40, right: 40, top: 10, bottom: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    child: FittedBox(
+                                      child: Text("CRT"),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Toko Suryana",
-                                  style: TextStyle(
-                                      color: Color(0xFFFD0000), fontSize: 16),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Text("07.00",
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Toko Suryana",
                                     style: TextStyle(
-                                        color: Color(0xFFF43DF3F),
-                                        fontSize: 12)),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Icon(Icons.forward),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  "08-20-2021",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 12),
-                                )
-                              ],
-                            )
-                          ],
+                                        color: Color(0xFFFD0000), fontSize: 16),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text("07.00",
+                                      style: TextStyle(
+                                          color: Color(0xFFF43DF3F),
+                                          fontSize: 12)),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Icon(Icons.forward),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "08-20-2021",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 12),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
-            )),
+                  )
+                ],
+              )),
+        ),
       ],
     );
   }
