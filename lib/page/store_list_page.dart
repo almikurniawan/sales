@@ -5,8 +5,9 @@ import 'package:sales/component/store_card.dart';
 import 'package:sales/page/store_page.dart';
 
 import 'notif.dart';
+
 class StoreListPage extends StatefulWidget {
-  const StoreListPage({ Key? key }) : super(key: key);
+  const StoreListPage({Key? key}) : super(key: key);
 
   @override
   _StoreListPageState createState() => _StoreListPageState();
@@ -17,11 +18,21 @@ class _StoreListPageState extends State<StoreListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF8FCFF),
+      floatingActionButton: ElevatedButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return StorePage();
+          }));
+        },
+        child: Icon(Icons.add),
+        style: ElevatedButton.styleFrom(primary: Color(0xFFFF5C46)),
+      ),
       body: Column(
         children: [
           CustomAppBar(
-            onNotificationClick: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Notif()));
+            onNotificationClick: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Notif()));
             },
           ),
           SizedBox(
@@ -35,7 +46,7 @@ class _StoreListPageState extends State<StoreListPage> {
                   children: [
                     HeaderMenu(
                       title: 'Store',
-                      onBack: (){
+                      onBack: () {
                         Navigator.pop(context);
                       },
                     ),
@@ -60,18 +71,6 @@ class _StoreListPageState extends State<StoreListPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context){
-                            return StorePage();
-                          }));
-                        },
-                        child: Icon(Icons.add),
-                        style: ElevatedButton.styleFrom(primary: Color(0xFFFF5C46)),
-                      ),
-                    )
                   ],
                 ),
               ),
