@@ -370,10 +370,11 @@ class _MenuState extends State<Menu> {
                             Padding(
                               padding: const EdgeInsets.all(6.0),
                               child: GestureDetector(
-                                onTap: (){
-                                  scanBarcodeNormal();
-                                },
-                                child: BuildCard(Icons.qr_code_2_outlined, "Scan")),
+                                  onTap: () {
+                                    scanBarcodeNormal();
+                                  },
+                                  child: BuildCard(
+                                      Icons.qr_code_2_outlined, "Scan")),
                             ),
                           ],
                         ),
@@ -680,15 +681,20 @@ class _MenuState extends State<Menu> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    child: FittedBox(
-                                      child: Text("CRT"),
-                                    ),
+                              Hero(
+                                tag: 'pp',
+                                child: ClipRRect(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        child: FittedBox(
+                                          child: Text("CRT"),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

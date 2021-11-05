@@ -40,11 +40,16 @@ class _HistoryDetailState extends State<HistoryDetail> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height/7.5,
-              child: CircleAvatar(
-                child: FittedBox(
-                  child: Text("CRT"),
+            Hero(
+              tag: 'pp',
+              child: ClipRRect(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height / 7.5,
+                  child: CircleAvatar(
+                    child: FittedBox(
+                      child: Text("CRT"),
+                    ),
+                  ),
                 ),
               ),
             ),
