@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-
+// import 'package:toast/toast.dart';
+import 'package:http/http.dart' as http;
 import 'menu.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -13,12 +16,45 @@ class _LoginState extends State<Login> {
   double getDiamater(BuildContext context) =>
       MediaQuery.of(context).size.width * 2 / 4;
 
-  String email = 'user@mail.com';
-  String password = '123456';
+  TextEditingController username = new TextEditingController();
+  TextEditingController password = new TextEditingController();
 
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
-  final formKey = new GlobalKey<FormState>();
+  bool isErrorLogin = false;
+  String massageErrorLogin = '';
+
+  Future<void> getToken() async {
+    var apiLogin = Uri.https('psdjeram.kediriapp.com', '/api/v1/auth/login');
+    print(apiLogin);
+    http.post(
+      apiLogin,
+      body: {
+        'sales_email': username.text,
+        'sales_password': password.text,
+      },
+    ).then((http.Response response) {
+      Map<String, dynamic> result = json.decode(response.body);
+      if (result['data']['code'] == 200) {
+        this.saveToken(result['data']['token'], result['data']['refreshtoken']);
+      } else {
+        setState(() {
+          isErrorLogin = true;
+          massageErrorLogin = result['data']['message'];
+        });
+      }
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  saveToken(String token, String refreshtoken) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+    await prefs.setString('refreshtoken', refreshtoken);
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) {
+      return Menu();
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +102,7 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(bottom: 60,top: 35),
+                    padding: EdgeInsets.only(bottom: 60, top: 35),
                     child: Image(
                         alignment: Alignment.center,
                         height: getDiamater(context),
@@ -81,7 +117,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   TextFormField(
-                    // controller: _emailController,
+                    controller: username,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       hintText: "Username",
@@ -112,7 +148,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   TextFormField(
-                    // controller: _emailController,
+                    controller: password,
                     obscureText: true,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
@@ -135,20 +171,25 @@ class _LoginState extends State<Login> {
                           EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                     ),
                   ),
+                  (isErrorLogin)
+                      ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                            child: Text(
+                            this.massageErrorLogin,
+                            style: TextStyle(color: Colors.white, fontSize: 11),
+                          )),
+                      )
+                      : Container(),
                   Padding(
                     padding: const EdgeInsets.only(top: 40),
                     child: ElevatedButton(
                       style:
                           ElevatedButton.styleFrom(primary: Color(0xFF43DF3F)),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Menu()),
-                        );
+                        this.getToken();
                       },
                       child: Container(
-                        // width: MediaQuery.of(context).size.width * 0.8,
-                        // height: MediaQuery.of(context).size.height * 0.06,
                         child: Center(
                           child: Text(
                             'Login',
@@ -158,25 +199,6 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 13),
-                  //   child: OutlinedButton(
-                  //     style: OutlinedButton.styleFrom(
-                  //       side: BorderSide(color: Colors.white),
-                  //     ),
-                  //     onPressed: () {},
-                  //     child: Container(
-                  //       // width: MediaQuery.of(context).size.width * 0.8,
-                  //       // height: MediaQuery.of(context).size.height * 0.06,
-                  //       child: Center(
-                  //         child: Text(
-                  //           'Sign Up',
-                  //           style: TextStyle(fontSize: 16, color: Colors.white),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               )),
         ),
