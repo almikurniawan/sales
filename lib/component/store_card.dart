@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 class StoreCard extends StatelessWidget {
-  const StoreCard({ Key? key }) : super(key: key);
+  final int id;
+  final String name;
+  final String image;
+  const StoreCard({ Key? key, required this.image, required this.name, required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +14,7 @@ class StoreCard extends StatelessWidget {
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(
           width: 100,
-          child: Icon(Icons.home_outlined, size: 80,),
+          child: Image(image: NetworkImage(this.image)),
         ),
         Expanded(
           child: Padding(
@@ -19,7 +22,7 @@ class StoreCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("#1224",
+                Text("#"+this.id.toString(),
                     style: TextStyle(
                         color: Colors.blue,
                         fontSize: 18,
@@ -27,7 +30,7 @@ class StoreCard extends StatelessWidget {
                 SizedBox(
                   height: 5,
                 ),
-                Text("PT. Indofood",
+                Text(this.name,
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 12,

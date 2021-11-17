@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sales/blocs/profile/profile_bloc.dart';
 import 'package:sales/blocs/profile/profile_state.dart';
+import 'package:sales/blocs/store/store_bloc.dart';
+import 'package:sales/blocs/store/store_state.dart';
 import 'package:sales/page/landing_page.dart';
 import 'package:sales/page/menu.dart';
 
@@ -19,6 +21,9 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (BuildContext context) {
             return ProfileBloc(ProfileUninitialized());
+          }),
+          BlocProvider(create: (BuildContext context) {
+            return StoreBloc(StoreUninitialized());
           }),
         ],
         child: MaterialApp(

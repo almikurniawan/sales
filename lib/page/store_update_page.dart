@@ -7,14 +7,19 @@ import 'package:sales/component/header_menu.dart';
 import 'package:geolocator/geolocator.dart';
 import 'notif.dart';
 
-class StorePage extends StatefulWidget {
-  const StorePage({Key? key}) : super(key: key);
+class StoreUpdatePage extends StatefulWidget {
+  final int id;
+  final String name;
+  final String owner;
+  final String phone;
+  final String address;
+  const StoreUpdatePage({Key? key, required this.phone, required this.owner, required this.name, required this.address, required this.id}) : super(key: key);
 
   @override
-  _StorePageState createState() => _StorePageState();
+  _StoreUpdatePageState createState() => _StoreUpdatePageState();
 }
 
-class _StorePageState extends State<StorePage> {
+class _StoreUpdatePageState extends State<StoreUpdatePage> {
   TextEditingController name = TextEditingController();
   TextEditingController owner = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -27,6 +32,10 @@ class _StorePageState extends State<StorePage> {
     // TODO: implement initState
     super.initState();
     _determinePosition();
+    name.text = widget.name;
+    owner.text = widget.owner;
+    phone.text = widget.phone;
+    address.text = widget.address;
     storeBloc = BlocProvider.of<StoreBloc>(context);
   }
 
@@ -197,13 +206,14 @@ class _StorePageState extends State<StorePage> {
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
                     onPressed: () {
-                      storeBloc.add(StoreInsert(
+                      storeBloc.add(StoreUpdate(
                         address: address.text,
                         latitude: lokasi.latitude.toString(),
                         longitude: lokasi.longitude.toString(),
                         name: name.text,
                         owner: owner.text,
-                        phone: phone.text
+                        phone: phone.text, 
+                        id: widget.id
                       ));
                     },
                     child: Text("Save"),

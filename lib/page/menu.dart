@@ -36,6 +36,13 @@ class _MenuState extends State<Menu> {
     profileBloc.add(ProfileLoad());
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    profileBloc.close();
+  }
+
   String? _scanBarcode;
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
