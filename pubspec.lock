@@ -7,7 +7,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.2"
+    version: "2.8.1"
   bloc:
     dependency: transitive
     description:
@@ -56,7 +56,7 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   fake_async:
     dependency: transitive
     description:
@@ -96,11 +96,7 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "7.3.3"
-=======
-    version: "7.3.2"
->>>>>>> 93fdccabeae46fbcca0bd91ee0b261105f4c1f59
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -194,11 +190,7 @@ packages:
       name: path_provider_linux
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.1.1"
-=======
-    version: "2.1.0"
->>>>>>> 93fdccabeae46fbcca0bd91ee0b261105f4c1f59
   path_provider_platform_interface:
     dependency: transitive
     description:
@@ -212,11 +204,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.0.4"
-=======
-    version: "2.0.3"
->>>>>>> 93fdccabeae46fbcca0bd91ee0b261105f4c1f59
   platform:
     dependency: transitive
     description:
@@ -258,11 +246,7 @@ packages:
       name: shared_preferences_linux
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.0.3"
-=======
-    version: "2.0.2"
->>>>>>> 93fdccabeae46fbcca0bd91ee0b261105f4c1f59
   shared_preferences_macos:
     dependency: transitive
     description:
@@ -290,11 +274,7 @@ packages:
       name: shared_preferences_windows
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.0.3"
-=======
-    version: "2.0.2"
->>>>>>> 93fdccabeae46fbcca0bd91ee0b261105f4c1f59
   sky_engine:
     dependency: transitive
     description: flutter
@@ -355,11 +335,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "2.1.1"
-=======
     version: "2.1.0"
->>>>>>> 93fdccabeae46fbcca0bd91ee0b261105f4c1f59
   win32:
     dependency: transitive
     description:

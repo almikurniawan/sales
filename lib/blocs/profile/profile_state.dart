@@ -26,15 +26,6 @@ class ProfileLoaded extends ProfileState{
       required this.salesCode,
       required this.salesImage});
 
-  ProfileLoaded.fromJson(Map<String, dynamic> json) {
-    salesId = json['sales_id'];
-    salesName = json['sales_name'];
-    salesEmail = json['sales_email'];
-    salesPhone = json['sales_phone'];
-    salesCode = json['sales_code'];
-    salesImage = json['sales_image'];
-  }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['sales_id'] = this.salesId;

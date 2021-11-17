@@ -24,7 +24,6 @@ class _LoginState extends State<Login> {
 
   Future<void> getToken() async {
     var apiLogin = Uri.https('psdjeram.kediriapp.com', '/api/v1/auth/login');
-    print(apiLogin);
     http.post(
       apiLogin,
       body: {
@@ -33,6 +32,7 @@ class _LoginState extends State<Login> {
       },
     ).then((http.Response response) {
       Map<String, dynamic> result = json.decode(response.body);
+      print(result);
       if (result['data']['code'] == 200) {
         this.saveToken(result['data']['token'], result['data']['refreshtoken']);
       } else {

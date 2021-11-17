@@ -10,18 +10,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     // TODO: implement mapEventToState
 
-    if (state is ProfileUninitialized) {
-      Map<String, dynamic> jsonProfile =
-          await ProfileRepository().loadProfile();
-      yield ProfileLoaded.fromJson(jsonProfile);
-    } else {
+    // if (state is ProfileUninitialized) {
+    //   Map<String, dynamic> jsonProfile =
+    //       await ProfileRepository().loadProfile();
+    //   // yield ProfileLoaded;
+    // } else {
       if (event is ProfileLoad) {
         Map<String, dynamic> jsonProfile =
             await ProfileRepository().loadProfile();
-        yield ProfileLoaded.fromJson(jsonProfile);
+            
+        yield ProfileLoading();
+        yield ProfileLoaded(salesId: jsonProfile['sales_id'], salesName: jsonProfile['sales_name'], salesEmail: jsonProfile['sales_email'], salesPhone: jsonProfile['sales_phone'], salesCode: jsonProfile['sales_code'], salesImage: jsonProfile['sales_image']);
       }else{
         yield ProfileLoading();
       }
-    }
+    // }
   }
 }

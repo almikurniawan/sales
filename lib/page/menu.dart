@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sales/blocs/profile/profile_bloc.dart';
+import 'package:sales/blocs/profile/profile_event.dart';
+import 'package:sales/blocs/profile/profile_state.dart';
 import 'package:sales/component/custom_appbar.dart';
 import 'package:sales/component/header_menu.dart';
 import 'package:sales/page/pos_page.dart';
@@ -20,6 +24,18 @@ class _MenuState extends State<Menu> {
   double getDiamater(BuildContext context) =>
       MediaQuery.of(context).size.width * 2 / 4;
 
+  late ProfileBloc profileBloc;
+  TextEditingController namaController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController telpController = TextEditingController();
+  TextEditingController alamatController = TextEditingController();
+
+  @override
+  void initState() {
+    profileBloc = BlocProvider.of<ProfileBloc>(context);
+    profileBloc.add(ProfileLoad());
+  }
+
   String? _scanBarcode;
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
@@ -32,9 +48,6 @@ class _MenuState extends State<Menu> {
       barcodeScanRes = 'Failed to get platform version.';
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
@@ -420,184 +433,216 @@ class _MenuState extends State<Menu> {
                         Flexible(
                           flex: 2,
                           child: SingleChildScrollView(
-                            child: Container(
-                              margin: EdgeInsets.all(20),
-                              color: const Color(0xFFF9FAFA),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("Nama",
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    // controller: _emailController,
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                      hintText: "Nama",
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 4, horizontal: 16),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("Email",
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    // controller: _emailController,
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                      hintText: "Email",
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 4, horizontal: 16),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("No. Telp",
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    // controller: _emailController,
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                      hintText: "No. Telp",
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 4, horizontal: 16),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("Alamat",
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    // controller: _emailController,
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                      hintText: "Alamat",
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 4, horizontal: 16),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                            child: BlocBuilder<ProfileBloc, ProfileState>(
+                              builder: (context, state) {
+                                if(state is ProfileUninitialized){
+                                  return CircularProgressIndicator();
+                                }else if(state is ProfileLoading){
+                                  return CircularProgressIndicator();
+                                }else if(state is ProfileLoaded){
+                                  namaController.text = state.salesName;
+                                  emailController.text = state.salesEmail;
+                                  telpController.text = state.salesPhone;
+                                  alamatController.text = state.salesCode;
+                                  return Container(
+                                    margin: EdgeInsets.all(20),
+                                    color: const Color(0xFFF9FAFA),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        OutlinedButton(
-                                            style: OutlinedButton.styleFrom(
-                                              side: BorderSide(
-                                                  color: Color(0xFF0C415F)),
-                                            ),
-                                            onPressed: () {},
-                                            child: Container(
-                                              child: Center(
-                                                child: Text(
-                                                  'Edit',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Color(0xFF0C415F)),
-                                                ),
-                                              ),
-                                            )),
-                                        ElevatedButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Color(0xFF0C415F))),
-                                          onPressed: () {},
-                                          child: Container(
-                                            child: Center(
-                                              child: Text('Save',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.white,
-                                                  )),
-                                            ),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Nama",
+                                                style: TextStyle(
+                                                    color: Colors.black)),
                                           ),
-                                        )
+                                        ),
+                                        TextFormField(
+                                          controller: namaController,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          decoration: InputDecoration(
+                                            hintText: "Nama",
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            contentPadding: EdgeInsets.symmetric(
+                                                vertical: 4, horizontal: 16),
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Email",
+                                                style: TextStyle(
+                                                    color: Colors.black)),
+                                          ),
+                                        ),
+                                        TextFormField(
+                                          controller: emailController,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          decoration: InputDecoration(
+                                            hintText: "Email",
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            contentPadding: EdgeInsets.symmetric(
+                                                vertical: 4, horizontal: 16),
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("No. Telp",
+                                                style: TextStyle(
+                                                    color: Colors.black)),
+                                          ),
+                                        ),
+                                        TextFormField(
+                                          controller: telpController,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          decoration: InputDecoration(
+                                            hintText: "No. Telp",
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            contentPadding: EdgeInsets.symmetric(
+                                                vertical: 4, horizontal: 16),
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Alamat",
+                                                style: TextStyle(
+                                                    color: Colors.black)),
+                                          ),
+                                        ),
+                                        TextFormField(
+                                          controller: alamatController,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          decoration: InputDecoration(
+                                            hintText: "Alamat",
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: BorderSide(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            contentPadding: EdgeInsets.symmetric(
+                                                vertical: 4, horizontal: 16),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              OutlinedButton(
+                                                  style: OutlinedButton.styleFrom(
+                                                    side: BorderSide(
+                                                        color: Color(0xFF0C415F)),
+                                                  ),
+                                                  onPressed: () {},
+                                                  child: Container(
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Edit',
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: Color(
+                                                                0xFF0C415F)),
+                                                      ),
+                                                    ),
+                                                  )),
+                                              ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty.all(
+                                                            Color(0xFF0C415F))),
+                                                onPressed: () {
+                                                  profileBloc.add(ProfileLoad());
+                                                },
+                                                child: Container(
+                                                  child: Center(
+                                                    child: Text('Save',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.white,
+                                                        )),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  );
+                                }else{
+                                  return CircularProgressIndicator();
+                                }
+                              },
                             ),
                           ),
                         ),
