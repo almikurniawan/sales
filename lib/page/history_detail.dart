@@ -1,4 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class HistoryDetail extends StatefulWidget {
   const HistoryDetail({Key? key}) : super(key: key);
@@ -8,6 +15,8 @@ class HistoryDetail extends StatefulWidget {
 }
 
 class _HistoryDetailState extends State<HistoryDetail> {
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,18 +49,9 @@ class _HistoryDetailState extends State<HistoryDetail> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Hero(
-              tag: 'pp',
-              child: ClipRRect(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height / 7.5,
-                  child: CircleAvatar(
-                    child: FittedBox(
-                      child: Text("CRT"),
-                    ),
-                  ),
-                ),
-              ),
+            Image(
+              width: MediaQuery.of(context).size.width * 0.2,
+              image: NetworkImage("url"),
             ),
             SizedBox(
               height: 30,

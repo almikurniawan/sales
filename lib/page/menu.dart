@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +14,9 @@ import 'package:sales/page/pos_page.dart';
 import 'package:sales/page/product_page.dart';
 import 'package:sales/page/store_list_page.dart';
 import 'package:sales/page/history_detail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'notif.dart';
+import 'package:http/http.dart' as http;
 
 class Menu extends StatefulWidget {
   const Menu({Key? key}) : super(key: key);
@@ -25,6 +30,8 @@ class _MenuState extends State<Menu> {
       MediaQuery.of(context).size.width * 2 / 4;
 
   late ProfileBloc profileBloc;
+  late List dataHistory = [];
+
   TextEditingController namaController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController telpController = TextEditingController();
@@ -34,6 +41,29 @@ class _MenuState extends State<Menu> {
   void initState() {
     profileBloc = BlocProvider.of<ProfileBloc>(context);
     profileBloc.add(ProfileLoad());
+    getProduct();
+  }
+
+  Future<void> getProduct() async {
+    var apiPoduct =
+        Uri.https('psdjeram.kediriapp.com', '/api/v1/scan/list?query');
+    String token = "";
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = (prefs.getString('token'))!;
+    print("token " + token);
+    http.get(apiPoduct, headers: {
+      HttpHeaders.authorizationHeader: "Token " + token
+    }).then((http.Response response) {
+      // if (response.statusCode == 401) {
+      //   logout(context);
+      // } else {
+      dynamic ambil = json.decode(response.body);
+      setState(() {
+        dataHistory = ambil['data'];
+      });
+      print(dataHistory);
+      // }
+    });
   }
 
   String? _scanBarcode;
@@ -435,11 +465,11 @@ class _MenuState extends State<Menu> {
                           child: SingleChildScrollView(
                             child: BlocBuilder<ProfileBloc, ProfileState>(
                               builder: (context, state) {
-                                if(state is ProfileUninitialized){
+                                if (state is ProfileUninitialized) {
                                   return CircularProgressIndicator();
-                                }else if(state is ProfileLoading){
+                                } else if (state is ProfileLoading) {
                                   return CircularProgressIndicator();
-                                }else if(state is ProfileLoaded){
+                                } else if (state is ProfileLoaded) {
                                   namaController.text = state.salesName;
                                   emailController.text = state.salesEmail;
                                   telpController.text = state.salesPhone;
@@ -448,7 +478,8 @@ class _MenuState extends State<Menu> {
                                     margin: EdgeInsets.all(20),
                                     color: const Color(0xFFF9FAFA),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
@@ -483,8 +514,10 @@ class _MenuState extends State<Menu> {
                                                 color: Colors.white,
                                               ),
                                             ),
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical: 4, horizontal: 16),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 4,
+                                                    horizontal: 16),
                                           ),
                                         ),
                                         Container(
@@ -518,8 +551,10 @@ class _MenuState extends State<Menu> {
                                                 color: Colors.white,
                                               ),
                                             ),
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical: 4, horizontal: 16),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 4,
+                                                    horizontal: 16),
                                           ),
                                         ),
                                         Container(
@@ -553,8 +588,10 @@ class _MenuState extends State<Menu> {
                                                 color: Colors.white,
                                               ),
                                             ),
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical: 4, horizontal: 16),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 4,
+                                                    horizontal: 16),
                                           ),
                                         ),
                                         Container(
@@ -588,8 +625,10 @@ class _MenuState extends State<Menu> {
                                                 color: Colors.white,
                                               ),
                                             ),
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical: 4, horizontal: 16),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 4,
+                                                    horizontal: 16),
                                           ),
                                         ),
                                         Padding(
@@ -599,9 +638,11 @@ class _MenuState extends State<Menu> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               OutlinedButton(
-                                                  style: OutlinedButton.styleFrom(
+                                                  style:
+                                                      OutlinedButton.styleFrom(
                                                     side: BorderSide(
-                                                        color: Color(0xFF0C415F)),
+                                                        color:
+                                                            Color(0xFF0C415F)),
                                                   ),
                                                   onPressed: () {},
                                                   child: Container(
@@ -618,10 +659,12 @@ class _MenuState extends State<Menu> {
                                               ElevatedButton(
                                                 style: ButtonStyle(
                                                     backgroundColor:
-                                                        MaterialStateProperty.all(
-                                                            Color(0xFF0C415F))),
+                                                        MaterialStateProperty
+                                                            .all(Color(
+                                                                0xFF0C415F))),
                                                 onPressed: () {
-                                                  profileBloc.add(ProfileLoad());
+                                                  profileBloc
+                                                      .add(ProfileLoad());
                                                 },
                                                 child: Container(
                                                   child: Center(
@@ -639,7 +682,7 @@ class _MenuState extends State<Menu> {
                                       ],
                                     ),
                                   );
-                                }else{
+                                } else {
                                   return CircularProgressIndicator();
                                 }
                               },
@@ -713,75 +756,77 @@ class _MenuState extends State<Menu> {
                   ),
                   Expanded(
                     child: SingleChildScrollView(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return HistoryDetail();
-                          }));
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: 40, right: 40, top: 10, bottom: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Hero(
-                                tag: 'pp',
-                                child: ClipRRect(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircleAvatar(
-                                        child: FittedBox(
-                                          child: Text("CRT"),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Toko Suryana",
-                                    style: TextStyle(
-                                        color: Color(0xFFFD0000), fontSize: 16),
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text("07.00",
-                                      style: TextStyle(
-                                          color: Color(0xFFF43DF3F),
-                                          fontSize: 12)),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Icon(Icons.forward),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    "08-20-2021",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 12),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
+                        child: ListView.builder(
+                          itemCount: dataHistory.length,
+                      itemBuilder: (context, index) => ListHistory(
+                        context,
+                        dataHistory[index]['id'],
+                        dataHistory[index]['image'],
+                        dataHistory[index]['name'],
+                        dataHistory[index]['time'],
+                        dataHistory[index]['date'],
                       ),
-                    ),
+                    )),
                   )
                 ],
               )),
         ),
       ],
+    );
+  }
+
+  GestureDetector ListHistory(
+      BuildContext context, String id, String url, String title, String jam, String tgl) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return HistoryDetail();
+        }));
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 40, right: 40, top: 10, bottom: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  image: NetworkImage(url),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(color: Color(0xFFFD0000), fontSize: 16),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(jam,
+                    style: TextStyle(color: Color(0xFFF43DF3F), fontSize: 12)),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Icon(Icons.forward),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  tgl,
+                  style: TextStyle(color: Colors.black, fontSize: 12),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 

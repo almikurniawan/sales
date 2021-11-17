@@ -1,7 +1,27 @@
+// ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations, unnecessary_brace_in_string_interps
+
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatefulWidget {
-  const ProductCard({Key? key}) : super(key: key);
+  final int id;
+  final String name;
+  final String price;
+  final String formatPrice;
+  final String stock;
+  final String formatStock;
+  final String urlImage;
+
+  const ProductCard(
+      {Key? key,
+      required this.id,
+      required this.name,
+      required this.price,
+      required this.formatPrice,
+      required this.stock,
+      required this.formatStock,
+      required this.urlImage,
+      })
+      : super(key: key);
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -17,8 +37,7 @@ class _ProductCardState extends State<ProductCard> {
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Image(
           width: MediaQuery.of(context).size.width * 0.2,
-          image: NetworkImage(
-              "https://cdn.shopify.com/s/files/1/0531/3255/8504/products/cheddar-01-big.png?v=1617143786"),
+          image: NetworkImage(widget.urlImage),
         ),
         Expanded(
           child: Padding(
@@ -29,7 +48,7 @@ class _ProductCardState extends State<ProductCard> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text("#1224",
+                      child: Text("#"+widget.id.toString(),
                           style: TextStyle(
                               color: Colors.blue,
                               fontSize: 18,
@@ -37,7 +56,7 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                     Expanded(
                       child: Text(
-                        "Stock : 5008",
+                        "Stock : "+widget.stock,
                         style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600),
                       ),
@@ -50,14 +69,14 @@ class _ProductCardState extends State<ProductCard> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text("Airly Chocolate",
+                      child: Text(widget.name,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
                               color: Colors.grey)),
                     ),
                     Expanded(
-                      child: Text("Rp. 10.000",
+                      child: Text("Rp. "+widget.formatPrice,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
