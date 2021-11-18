@@ -1,7 +1,15 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sales/component/custom_appbar.dart';
 import 'package:sales/component/header_menu.dart';
 import 'package:sales/component/product_card.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'notif.dart';
 
@@ -13,29 +21,58 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  late List data = [];
+  @override
+  void initState() {
+    super.initState();
+    getProduct();
+  }
+  Future<void> getProduct() async {
+    var apiPoduct =
+        Uri.https('psdjeram.kediriapp.com', '/api/v1/product/list?query');
+    String token = "";
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = (prefs.getString('token'))!;
+    print("token "+token);
+    http.get(apiPoduct, headers: {
+      HttpHeaders.authorizationHeader: "Token " + token
+    }).then((http.Response response) {
+      // if (response.statusCode == 401) {
+      //   logout(context);
+      // } else {
+      dynamic ambil = json.decode(response.body);
+      setState(() {
+        data = ambil['data'];
+      });
+      print(data);
+      // }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF8FCFF),
+      backgroundColor: const Color(0xFFF8FCFF),
       body: Column(
         children: [
           CustomAppBar(
-            onNotificationClick: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Notif()));
+            onNotificationClick: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => const Notif()));
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Expanded(
             child: SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
                     HeaderMenu(
                       title: 'Product',
-                      onBack: (){
+                      onBack: () {
                         Navigator.pop(context);
                       },
                     ),
@@ -67,11 +104,20 @@ class _ProductPageState extends State<ProductPage> {
                       child: ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 10,
-                          itemBuilder: (_, index) {
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 8),
-                              child: ProductCard(),
+                              child: 
+                              ProductCard(
+                                id: data[index]['id'],
+                                name: data[index]['name'],
+                                price: data[index]['price'],
+                                formatPrice: data[index]['format_rice'],
+                                stock: data[index]['stock'],
+                                formatStock: data[index]['format_stock'],
+                                urlImage: data[index]['image'],
+                              ),
                             );
                           }),
                     )
