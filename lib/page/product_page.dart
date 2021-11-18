@@ -29,23 +29,19 @@ class _ProductPageState extends State<ProductPage> {
   }
   Future<void> getProduct() async {
     var apiPoduct =
-        Uri.https('psdjeram.kediriapp.com', '/api/v1/product/list?query');
+        Uri.https('psdjeram.kediriapp.com', '/api/v1/product/list', {
+          'query' : 'Bidara'
+        });
     String token = "";
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = (prefs.getString('token'))!;
-    print("token "+token);
     http.get(apiPoduct, headers: {
-      HttpHeaders.authorizationHeader: "Token " + token
+      HttpHeaders.authorizationHeader: "Bearer " + token
     }).then((http.Response response) {
-      // if (response.statusCode == 401) {
-      //   logout(context);
-      // } else {
       dynamic ambil = json.decode(response.body);
       setState(() {
         data = ambil['data'];
       });
-      print(data);
-      // }
     });
   }
 
@@ -113,7 +109,7 @@ class _ProductPageState extends State<ProductPage> {
                                 id: data[index]['id'],
                                 name: data[index]['name'],
                                 price: data[index]['price'],
-                                formatPrice: data[index]['format_rice'],
+                                formatPrice: data[index]['format_price'] ?? "",
                                 stock: data[index]['stock'],
                                 formatStock: data[index]['format_stock'],
                                 urlImage: data[index]['image'],
