@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:sales/blocs/profile/profile_bloc.dart';
 import 'package:sales/blocs/profile/profile_event.dart';
 import 'package:sales/blocs/profile/profile_state.dart';
@@ -36,34 +37,37 @@ class _MenuState extends State<Menu> {
   TextEditingController emailController = TextEditingController();
   TextEditingController telpController = TextEditingController();
   TextEditingController alamatController = TextEditingController();
+  late Position lokasi;
 
   @override
   void initState() {
     profileBloc = BlocProvider.of<ProfileBloc>(context);
     profileBloc.add(ProfileLoad());
-    getProduct();
+    _determinePosition();
   }
 
-  Future<void> getProduct() async {
-    var apiPoduct =
-        Uri.https('psdjeram.kediriapp.com', '/api/v1/scan/list?query');
-    String token = "";
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = (prefs.getString('token'))!;
-    print("token " + token);
-    http.get(apiPoduct, headers: {
-      HttpHeaders.authorizationHeader: "Token " + token
-    }).then((http.Response response) {
-      // if (response.statusCode == 401) {
-      //   logout(context);
-      // } else {
-      dynamic ambil = json.decode(response.body);
-      setState(() {
-        dataHistory = ambil['data'];
-      });
-      print(dataHistory);
-      // }
-    });
+  Future<void> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    lokasi = await Geolocator.getCurrentPosition();
   }
 
   @override
@@ -86,10 +90,24 @@ class _MenuState extends State<Menu> {
     }
 
     if (!mounted) return;
+    
+    await scanInsert(barcodeScanRes);
+  }
 
-    setState(() {
-      _scanBarcode = barcodeScanRes;
+  Future<void> scanInsert(String barcode) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = await prefs.getString('token') ?? "";
+    Uri urlApi =
+        Uri.https("psdjeram.kediriapp.com", '/api/v1/scan/insert');
+    var result = await http.post(urlApi, headers: {
+      HttpHeaders.authorizationHeader: "Bearer " + token
+    }, body: {
+      "qrcode" : barcode,
+      "latitude" : lokasi.latitude.toString(),
+      "longitude" : lokasi.longitude.toString()
     });
+
+    print(jsonDecode(result.body));
   }
 
   @override
