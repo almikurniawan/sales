@@ -20,7 +20,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             await ProfileRepository().loadProfile();
             
         yield ProfileLoading();
-        yield ProfileLoaded(salesId: jsonProfile['sales_id'], salesName: jsonProfile['sales_name'], salesEmail: jsonProfile['sales_email'], salesPhone: jsonProfile['sales_phone'], salesCode: jsonProfile['sales_code'], salesImage: jsonProfile['sales_image']);
+        yield ProfileLoaded(salesId: jsonProfile['id'], salesName: jsonProfile['sales_name'], salesEmail: jsonProfile['sales_email'], salesPhone: jsonProfile['sales_phone'], salesCode: jsonProfile['sales_code'], salesImage: jsonProfile['sales_image']);
       }else{
         yield ProfileLoading();
       }

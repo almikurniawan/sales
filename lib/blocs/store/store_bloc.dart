@@ -10,15 +10,18 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   @override
   Stream<StoreState> mapEventToState(StoreEvent event) async*{
     // TODO: implement mapEventToState
+    print(event);
     if(event is StoreLoad){
       List<StoreModel> items = await StoreRepository().loadStore();
       yield StoreLoaded(items: items);
     }else if(event is StoreInsert){
-      await StoreRepository().insert(event);
+      dynamic res = await StoreRepository().insert(event);
+      yield StoreSuccessInsert(data: res['data']);
       List<StoreModel> items = await StoreRepository().loadStore();
       yield StoreLoaded(items: items);
     }else if(event is StoreUpdate){
-      await StoreRepository().update(event);
+      dynamic res = await StoreRepository().update(event);
+      yield StoreSuccessInsert(data: res['data']);
       List<StoreModel> items = await StoreRepository().loadStore();
       yield StoreLoaded(items: items);
     }

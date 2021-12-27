@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sales/blocs/store/store_bloc.dart';
 import 'package:sales/blocs/store/store_event.dart';
+import 'package:sales/blocs/store/store_state.dart';
 import 'package:sales/component/custom_appbar.dart';
 import 'package:sales/component/header_menu.dart';
 import 'package:geolocator/geolocator.dart';
@@ -56,164 +58,182 @@ class _StorePageState extends State<StorePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFF8FCFF),
-      body: Column(
-        children: [
-          CustomAppBar(
-            onNotificationClick: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Notif()));
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                HeaderMenu(
-                  title: 'Store',
-                  onBack: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text("Nama Toko"),
-                SizedBox(
-                  height: 5,
-                ),
-                TextField(
-                  controller: name,
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                      ),
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("Pemilik Toko"),
-                SizedBox(
-                  height: 5,
-                ),
-                TextField(
-                  controller: owner,
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                      ),
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("No. Telp"),
-                SizedBox(
-                  height: 5,
-                ),
-                TextField(
-                  controller: phone,
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                      ),
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text("Alamat"),
-                SizedBox(
-                  height: 5,
-                ),
-                TextField(
-                  controller: address,
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                      ),
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  ),
-                ),
-                SizedBox(height: 15),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      storeBloc.add(StoreInsert(
-                        address: address.text,
-                        latitude: lokasi.latitude.toString(),
-                        longitude: lokasi.longitude.toString(),
-                        name: name.text,
-                        owner: owner.text,
-                        phone: phone.text
-                      ));
-                    },
-                    child: Text("Save"),
-                    style: ElevatedButton.styleFrom(primary: Color(0xFF0C415F)),
-                  ),
-                )
-              ],
+    return BlocListener<StoreBloc, StoreState>(
+      listener: (ctx, state) {
+        if (state is StoreSuccessInsert) {
+          Fluttertoast.showToast(
+              msg: "Berhasil Menambah Store.",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xFFF8FCFF),
+        body: Column(
+          children: [
+            CustomAppBar(
+              onNotificationClick: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Notif()));
+              },
             ),
-          )
-        ],
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      HeaderMenu(
+                        title: 'Store',
+                        onBack: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text("Nama Toko"),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      TextField(
+                        controller: name,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text("Pemilik Toko"),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      TextField(
+                        controller: owner,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text("No. Telp"),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      TextField(
+                        controller: phone,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text("Alamat"),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      TextField(
+                        controller: address,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            storeBloc.add(StoreInsert(
+                                address: address.text,
+                                latitude: lokasi.latitude.toString(),
+                                longitude: lokasi.longitude.toString(),
+                                name: name.text,
+                                owner: owner.text,
+                                phone: phone.text));
+                          },
+                          child: Text("Save"),
+                          style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF0C415F)),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

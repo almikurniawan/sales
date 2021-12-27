@@ -8,17 +8,41 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class HistoryDetail extends StatefulWidget {
-  const HistoryDetail({Key? key}) : super(key: key);
+  final String id;
+  const HistoryDetail({Key? key, required this.id}) : super(key: key);
 
   @override
   _HistoryDetailState createState() => _HistoryDetailState();
 }
 
 class _HistoryDetailState extends State<HistoryDetail> {
+
+  dynamic data;
   
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDetail();
+  }
+
+  Future<void> getDetail() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = await prefs.getString('token') ?? "";
+    Uri urlApi =
+        Uri.https("kediriapp.com", '/salesapp/api/v1/history/show/'+widget.id);
+    var result = await http.get(urlApi, headers: {
+      HttpHeaders.authorizationHeader: "Bearer " + token
+    });
+    Map<String, dynamic> jsonObject = jsonDecode(result.body);
+    setState(() {
+      data = jsonObject['data'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    print(data);
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -43,7 +67,9 @@ class _HistoryDetailState extends State<HistoryDetail> {
           style: TextStyle(color: Colors.black, fontSize: 24),
         ),
       ),
-      body: Container(
+      body: 
+      (data==null) ? Center(child: CircularProgressIndicator(),) : 
+      Container(
         color: Color(0xFFF8FCFF),
         padding: EdgeInsets.all(10),
         child: Column(
@@ -51,13 +77,13 @@ class _HistoryDetailState extends State<HistoryDetail> {
           children: [
             Image(
               width: MediaQuery.of(context).size.width * 0.2,
-              image: NetworkImage("url"),
+              image: NetworkImage(data['image']),
             ),
             SizedBox(
               height: 30,
             ),
             Text(
-              "Toko Suryana",
+              data['store_name'],
               style: TextStyle(color: Color(0xFFFD0000), fontSize: 24),
             ),
             SizedBox(
@@ -71,17 +97,17 @@ class _HistoryDetailState extends State<HistoryDetail> {
               children: [
                 TableRow(children: [
                   TableCell(child: Text("Tanggal")),
-                  TableCell(child: Text(": 09-18-2021")),
+                  TableCell(child: Text(": "+data['date'])),
                 ]),
                 TableRow(children: [
                   TableCell(child: Text("Waktu")),
-                  TableCell(child: Text(": 07.00 WIB")),
+                  TableCell(child: Text(": "+data['time'])),
                 ]),
                 TableRow(children: [
                   TableCell(child: Text("Keterangan")),
                   TableCell(
                       child: Text(
-                    ": Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quam viverra id purus posuere. Nisi amet, risus, risus amet potenti adipiscing dolor nunc nec. Bibendum pellentesque ipsum diam quis. Amet, aenean placerat turpis facilisi. Velit, sapien integer praesent commodo interdum dui eu nullam adipiscing. ",
+                    ": " + (data['note'] ?? ""),
                     textAlign: TextAlign.justify,
                   )),
                 ]),

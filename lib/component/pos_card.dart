@@ -20,6 +20,8 @@ class _PosCardState extends State<PosCard> {
   
   @override
   Widget build(BuildContext context) {
+    double? price = double.tryParse(widget.item['price']);
+
     return Container(
       padding: EdgeInsets.fromLTRB(15, 8, 8, 8),
       child: Row(
@@ -28,7 +30,7 @@ class _PosCardState extends State<PosCard> {
           Image(
             width: MediaQuery.of(context).size.width * 0.2,
             image: NetworkImage(
-                "https://cdn.shopify.com/s/files/1/0531/3255/8504/products/cheddar-01-big.png?v=1617143786"),
+                widget.item['image'] ?? "https://www.almahmood.co/wp-content/uploads/2020/04/test-product.png"),
           ),
           Expanded(
               child: Padding(
@@ -36,7 +38,7 @@ class _PosCardState extends State<PosCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.item['id'],
+                Text(widget.item['name'].toString(),
                     style: TextStyle(
                         color: Colors.blue,
                         fontSize: 18,
@@ -52,13 +54,13 @@ class _PosCardState extends State<PosCard> {
                     }, ),
                   ],
                 ),
-                Text((format.format((widget.item['harga']*widget.item['jumlah'])).toString()))
+                Text((format.format((price ?? 0 * widget.item['jumlah'])).toString()))
               ],
             ),
           )),
-          IconButton(onPressed: (){
-            widget.onRemove!();
-          }, icon: Icon(Icons.close, color: Colors.red,))
+          // IconButton(onPressed: (){
+          //   widget.onRemove!();
+          // }, icon: Icon(Icons.close, color: Colors.red,))
         ],
       ),
     );

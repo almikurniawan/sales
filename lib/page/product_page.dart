@@ -29,7 +29,7 @@ class _ProductPageState extends State<ProductPage> {
   }
   Future<void> getProduct() async {
     var apiPoduct =
-        Uri.https('psdjeram.kediriapp.com', '/api/v1/product/list', {
+        Uri.https('kediriapp.com', '/salesapp/api/v1/product/list', {
           'query' : 'Bidara'
         });
     String token = "";
@@ -39,6 +39,7 @@ class _ProductPageState extends State<ProductPage> {
       HttpHeaders.authorizationHeader: "Bearer " + token
     }).then((http.Response response) {
       dynamic ambil = json.decode(response.body);
+      print(ambil);
       setState(() {
         data = ambil['data'];
       });
@@ -107,12 +108,12 @@ class _ProductPageState extends State<ProductPage> {
                               child: 
                               ProductCard(
                                 id: data[index]['id'],
-                                name: data[index]['name'],
-                                price: data[index]['price'],
-                                formatPrice: data[index]['format_price'] ?? "",
+                                name: data[index]['product_name'],
+                                price: data[index]['product_price'],
+                                formatPrice: data[index]['product_price'] ?? "",
                                 stock: data[index]['stock'],
-                                formatStock: data[index]['format_stock'],
-                                urlImage: data[index]['image'],
+                                formatStock: data[index]['stock'],
+                                urlImage: data[index]['product_image'],
                               ),
                             );
                           }),

@@ -7,6 +7,7 @@ import 'package:sales/component/custom_appbar.dart';
 import 'package:sales/component/header_menu.dart';
 import 'package:sales/component/store_card.dart';
 import 'package:sales/page/store_page.dart';
+import 'package:sales/page/store_update_page.dart';
 
 import 'notif.dart';
 
@@ -91,7 +92,7 @@ class _StoreListPageState extends State<StoreListPage> {
                                   return GestureDetector(
                                     onTap: (){
                                       Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => StorePage()));
+                  context, MaterialPageRoute(builder: (context) => StoreUpdatePage(id: state.items[index].id, name: state.items[index].name, owner: state.items[index].owner, address: state.items[index].address, phone: state.items[index].phone,)));
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(bottom: 8),

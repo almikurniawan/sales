@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'menu.dart';
@@ -23,7 +24,7 @@ class _LoginState extends State<Login> {
   String massageErrorLogin = '';
 
   Future<void> getToken() async {
-    var apiLogin = Uri.https('psdjeram.kediriapp.com', '/api/v1/auth/login');
+    var apiLogin = Uri.https('kediriapp.com', '/salesapp/api/v1/auth/login');
     http.post(
       apiLogin,
       body: {
@@ -33,8 +34,8 @@ class _LoginState extends State<Login> {
     ).then((http.Response response) {
       Map<String, dynamic> result = json.decode(response.body);
       print(result);
-      if (result['data']['code'] == 200) {
-        this.saveToken(result['data']['token'], result['data']['refreshtoken']);
+      if (result['status'] == 'success') {
+        this.saveToken(result['api_key'], result['sales_id']);
       } else {
         setState(() {
           isErrorLogin = true;
@@ -43,13 +44,22 @@ class _LoginState extends State<Login> {
       }
     }).catchError((e) {
       print(e);
+      Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
     });
   }
 
-  saveToken(String token, String refreshtoken) async {
+  saveToken(String token, int salesId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
-    await prefs.setString('refreshtoken', refreshtoken);
+    await prefs.setString('sales_id', salesId.toString());
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (BuildContext context) {
       return Menu();

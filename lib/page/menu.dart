@@ -10,9 +10,9 @@ import 'package:sales/blocs/profile/profile_bloc.dart';
 import 'package:sales/blocs/profile/profile_event.dart';
 import 'package:sales/blocs/profile/profile_state.dart';
 import 'package:sales/component/custom_appbar.dart';
-import 'package:sales/component/header_menu.dart';
 import 'package:sales/page/pos_page.dart';
 import 'package:sales/page/product_page.dart';
+import 'package:sales/page/qr_scan_page.dart';
 import 'package:sales/page/store_list_page.dart';
 import 'package:sales/page/history_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,6 +44,25 @@ class _MenuState extends State<Menu> {
     profileBloc = BlocProvider.of<ProfileBloc>(context);
     profileBloc.add(ProfileLoad());
     _determinePosition();
+
+    loadHistory();
+  }
+
+  Future<void> loadHistory() async {
+    // dataHistory[index]['id'],
+    //                   dataHistory[index]['image'],
+    //                   dataHistory[index]['name'],
+    //                   dataHistory[index]['time'],
+    //                   dataHistory[index]['date'],
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = await prefs.getString('token') ?? "";
+    Uri urlApi = Uri.https("kediriapp.com", '/salesapp/api/v1/history/list');
+    var result = await http.get(urlApi,
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    Map<String, dynamic> jsonObject = jsonDecode(result.body);
+    setState(() {
+      dataHistory = jsonObject['data'];
+    });
   }
 
   Future<void> _determinePosition() async {
@@ -90,28 +109,31 @@ class _MenuState extends State<Menu> {
     }
 
     if (!mounted) return;
-    
+
     await scanInsert(barcodeScanRes);
   }
 
-  Future<void> scanInsert(String barcode) async{
+  Future<void> scanInsert(String barcode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = await prefs.getString('token') ?? "";
-    Uri urlApi =
-        Uri.https("psdjeram.kediriapp.com", '/api/v1/scan/insert');
+    Uri urlApi = Uri.https("kediriapp.com", '/salesapp/api/v1/scan/insert');
     var result = await http.post(urlApi, headers: {
       HttpHeaders.authorizationHeader: "Bearer " + token
     }, body: {
-      "qrcode" : barcode,
-      "latitude" : lokasi.latitude.toString(),
-      "longitude" : lokasi.longitude.toString()
+      "qrcode": barcode,
+      "latitude": lokasi.latitude.toString(),
+      "longitude": lokasi.longitude.toString()
     });
 
-    print(jsonDecode(result.body));
+    var resJson = jsonDecode(result.body);
+    print(resJson);
+    await prefs.setInt('store_id', resJson['data']['sales_hist_store_id']);
+    await prefs.setString('store_name', resJson['data']['store_name']);
   }
 
   @override
   Widget build(BuildContext context) {
+    print(dataHistory.length);
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -439,7 +461,12 @@ class _MenuState extends State<Menu> {
                               padding: const EdgeInsets.all(6.0),
                               child: GestureDetector(
                                   onTap: () {
-                                    scanBarcodeNormal();
+                                    // scanBarcodeNormal();
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          const QrScanPage(),
+                                    ));
                                   },
                                   child: BuildCard(
                                       Icons.qr_code_2_outlined, "Scan")),
@@ -452,17 +479,21 @@ class _MenuState extends State<Menu> {
                 ],
               ),
               TabHistory(context),
+              // Container(
+              //   width: double.infinity,
+              //   child: Text("tes"),
+              // ),
               Stack(
                 children: [
                   Container(
                     child: Column(
                       children: [
                         Flexible(
-                          flex: 1,
+                          flex: 2,
                           child: Container(
                             color: const Color(0xFFFF5C46),
                             width: double.infinity,
-                            height: 238,
+                            height: 300,
                             child: Center(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -486,7 +517,7 @@ class _MenuState extends State<Menu> {
                           ),
                         ),
                         Flexible(
-                          flex: 2,
+                          flex: 3,
                           child: SingleChildScrollView(
                             child: BlocBuilder<ProfileBloc, ProfileState>(
                               builder: (context, state) {
@@ -745,7 +776,8 @@ class _MenuState extends State<Menu> {
     );
   }
 
-  Column TabHistory(BuildContext context) {
+  Widget TabHistory(BuildContext context) {
+    // return Text("tes");
     return Column(
       children: [
         CustomAppBar(
@@ -755,57 +787,58 @@ class _MenuState extends State<Menu> {
           },
         ),
         Expanded(
-          child: Container(
-              color: Color(0xFFF8FCFF),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 40,
-                        ),
-                        Text(
-                          "History Scan",
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(
-                          width: 40,
-                        )
-                      ],
+          child: SingleChildScrollView(
+            child: Container(
+                color: Color(0xFFF8FCFF),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 40,
+                          ),
+                          Text(
+                            "History Scan",
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            width: 40,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                        child: ListView.builder(
-                          itemCount: dataHistory.length,
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: dataHistory.length,
                       itemBuilder: (context, index) => ListHistory(
                         context,
-                        dataHistory[index]['id'],
+                        dataHistory[index]['id'].toString(),
                         dataHistory[index]['image'],
-                        dataHistory[index]['name'],
+                        dataHistory[index]['store_name'],
                         dataHistory[index]['time'],
                         dataHistory[index]['date'],
                       ),
-                    )),
-                  )
-                ],
-              )),
+                    )
+                  ],
+                )),
+          ),
         ),
       ],
     );
   }
 
-  GestureDetector ListHistory(
-      BuildContext context, String id, String url, String title, String jam, String tgl) {
+  GestureDetector ListHistory(BuildContext context, String id, String url,
+      String title, String jam, String tgl) {
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return HistoryDetail();
+          return HistoryDetail(id: id);
         }));
       },
       child: Container(

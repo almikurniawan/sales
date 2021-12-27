@@ -9,7 +9,7 @@ class ProductCard extends StatefulWidget {
   final String formatPrice;
   final String stock;
   final String formatStock;
-  final String urlImage;
+  final String? urlImage;
 
   const ProductCard(
       {Key? key,
@@ -19,7 +19,7 @@ class ProductCard extends StatefulWidget {
       required this.formatPrice,
       required this.stock,
       required this.formatStock,
-      required this.urlImage,
+      this.urlImage,
       })
       : super(key: key);
 
@@ -37,7 +37,7 @@ class _ProductCardState extends State<ProductCard> {
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Image(
           width: MediaQuery.of(context).size.width * 0.2,
-          image: NetworkImage(widget.urlImage),
+          image: NetworkImage(widget.urlImage ?? "https://www.almahmood.co/wp-content/uploads/2020/04/test-product.png"),
         ),
         Expanded(
           child: Padding(
