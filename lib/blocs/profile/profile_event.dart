@@ -6,8 +6,10 @@ class ProfileLoad extends ProfileEvent {
 }
 
 class ProfileUpdate extends ProfileEvent {
-  int id;
-  String nama;
+  String name;
+  String email;
+  String telp;
+  String address;
 
-  ProfileUpdate({required this.id, required this.nama});
+  ProfileUpdate({required this.name, required this.email, required this.telp, required this.address});
 }

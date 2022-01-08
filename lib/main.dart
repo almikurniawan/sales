@@ -10,7 +10,7 @@ import 'package:sales/page/landing_page.dart';
 import 'package:sales/page/menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async{
   runApp(const MyApp());
 }
 

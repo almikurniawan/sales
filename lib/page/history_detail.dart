@@ -42,7 +42,6 @@ class _HistoryDetailState extends State<HistoryDetail> {
 
   @override
   Widget build(BuildContext context) {
-    print(data);
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,

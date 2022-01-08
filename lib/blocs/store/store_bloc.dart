@@ -10,7 +10,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   @override
   Stream<StoreState> mapEventToState(StoreEvent event) async*{
     // TODO: implement mapEventToState
-    print(event);
     if(event is StoreLoad){
       List<StoreModel> items = await StoreRepository().loadStore();
       yield StoreLoaded(items: items);

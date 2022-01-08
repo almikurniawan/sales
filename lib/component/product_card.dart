@@ -1,12 +1,13 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations, unnecessary_brace_in_string_interps
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ProductCard extends StatefulWidget {
   final int id;
   final String name;
-  final String price;
-  final String formatPrice;
+  final double price;
+  final double formatPrice;
   final String stock;
   final String formatStock;
   final String? urlImage;
@@ -30,6 +31,10 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
+    NumberFormat format = NumberFormat.currency(
+      locale: "id_ID",
+      symbol: "Rp. "
+    );
     return Container(
       padding: EdgeInsets.fromLTRB(15, 8, 8, 8),
       decoration: BoxDecoration(
@@ -76,7 +81,7 @@ class _ProductCardState extends State<ProductCard> {
                               color: Colors.grey)),
                     ),
                     Expanded(
-                      child: Text("Rp. "+widget.formatPrice,
+                      child: Text("Rp. "+format.format(widget.formatPrice),
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,

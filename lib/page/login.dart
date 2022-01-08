@@ -33,7 +33,6 @@ class _LoginState extends State<Login> {
       },
     ).then((http.Response response) {
       Map<String, dynamic> result = json.decode(response.body);
-      print(result);
       if (result['status'] == 'success') {
         this.saveToken(result['api_key'], result['sales_id']);
       } else {
@@ -43,9 +42,8 @@ class _LoginState extends State<Login> {
         });
       }
     }).catchError((e) {
-      print(e);
       Fluttertoast.showToast(
-        msg: e.toString(),
+        msg: "Periksa koneksi internet anda!",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,

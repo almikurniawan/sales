@@ -30,6 +30,7 @@ class PosRepository {
       HttpHeaders.authorizationHeader: "Bearer " + token
     });
     Map<String, dynamic> jsonObject = jsonDecode(result.body);
+    print(jsonObject);
     return jsonObject;
   }
 }

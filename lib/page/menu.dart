@@ -6,13 +6,16 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+import 'package:sales/blocs/pos/pos_bloc.dart';
+import 'package:sales/blocs/pos/pos_state.dart';
 import 'package:sales/blocs/profile/profile_bloc.dart';
 import 'package:sales/blocs/profile/profile_event.dart';
 import 'package:sales/blocs/profile/profile_state.dart';
 import 'package:sales/component/custom_appbar.dart';
 import 'package:sales/page/pos_page.dart';
 import 'package:sales/page/product_page.dart';
-import 'package:sales/page/qr_scan_page.dart';
+import 'package:sales/page/sales_selfi_page.dart';
 import 'package:sales/page/store_list_page.dart';
 import 'package:sales/page/history_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,22 +41,32 @@ class _MenuState extends State<Menu> {
   TextEditingController telpController = TextEditingController();
   TextEditingController alamatController = TextEditingController();
   late Position lokasi;
+  int pendapatan = 0;
+  int pendapatanToday = 0;
 
   @override
   void initState() {
     profileBloc = BlocProvider.of<ProfileBloc>(context);
     profileBloc.add(ProfileLoad());
     _determinePosition();
-
     loadHistory();
+    loadDashboard();
+  }
+
+  Future<void> loadDashboard() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = await prefs.getString('token') ?? "";
+    Uri urlApi = Uri.https("kediriapp.com", '/salesapp/api/v1/dashboard');
+    var result = await http.get(urlApi,
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    Map<String, dynamic> jsonObject = jsonDecode(result.body);
+    setState(() {
+      pendapatan = int.parse(jsonObject['data']['pendapatan']);
+      pendapatanToday = int.parse(jsonObject['data']['pendapatanToday']);
+    });
   }
 
   Future<void> loadHistory() async {
-    // dataHistory[index]['id'],
-    //                   dataHistory[index]['image'],
-    //                   dataHistory[index]['name'],
-    //                   dataHistory[index]['time'],
-    //                   dataHistory[index]['date'],
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = await prefs.getString('token') ?? "";
     Uri urlApi = Uri.https("kediriapp.com", '/salesapp/api/v1/history/list');
@@ -93,7 +106,6 @@ class _MenuState extends State<Menu> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    profileBloc.close();
   }
 
   String? _scanBarcode;
@@ -103,14 +115,17 @@ class _MenuState extends State<Menu> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
 
     if (!mounted) return;
 
-    await scanInsert(barcodeScanRes);
+    Navigator.push(context, MaterialPageRoute(builder: (context){
+      return SalesSelfiPage(barcode : barcodeScanRes); 
+    }));
+
+    // await scanInsert(barcodeScanRes);
   }
 
   Future<void> scanInsert(String barcode) async {
@@ -126,24 +141,25 @@ class _MenuState extends State<Menu> {
     });
 
     var resJson = jsonDecode(result.body);
-    print(resJson);
     await prefs.setInt('store_id', resJson['data']['sales_hist_store_id']);
     await prefs.setString('store_name', resJson['data']['store_name']);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(dataHistory.length);
+    var currency = NumberFormat.currency(locale: "id_ID", symbol: "Rp. ");
     return DefaultTabController(
       length: 4,
       child: Scaffold(
           body: TabBarView(
+            
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     color: const Color(0xFFFF5C46),
+                    height: MediaQuery.of(context).size.height * 0.6,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -159,20 +175,20 @@ class _MenuState extends State<Menu> {
                           padding: EdgeInsets.only(left: 40, right: 40),
                           child: Column(
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    "Today's Income ",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  Text(
-                                    "Rp 2.000.000",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
+                              // Row(
+                              //   children: [
+                              //     Text(
+                              //       "Today's Income ",
+                              //       style: TextStyle(color: Colors.white),
+                              //     ),
+                              //     Text(
+                              //       "Rp 2.000.000",
+                              //       style: TextStyle(
+                              //           color: Colors.white,
+                              //           fontWeight: FontWeight.bold),
+                              //     ),
+                              //   ],
+                              // ),
                               Card(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
@@ -187,7 +203,7 @@ class _MenuState extends State<Menu> {
                                     padding: const EdgeInsets.only(
                                         top: 10, bottom: 10),
                                     child: Text(
-                                      "Average Income",
+                                      "Today's Income",
                                       style: TextStyle(
                                           color: Color(0xFFC4C4C4),
                                           fontSize: 12),
@@ -196,7 +212,7 @@ class _MenuState extends State<Menu> {
                                   subtitle: Padding(
                                     padding: const EdgeInsets.only(
                                         top: 10, bottom: 10),
-                                    child: Text("Rp 18.440.000",
+                                    child: Text(currency.format(pendapatanToday),
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 12)),
                                   ),
@@ -220,7 +236,7 @@ class _MenuState extends State<Menu> {
                                     padding: const EdgeInsets.only(
                                         top: 10, bottom: 10),
                                     child: Text(
-                                      "Average Income",
+                                      "Last 7 day's Income",
                                       style: TextStyle(
                                           color: Color(0xFFC4C4C4),
                                           fontSize: 12),
@@ -229,7 +245,7 @@ class _MenuState extends State<Menu> {
                                   subtitle: Padding(
                                     padding: const EdgeInsets.only(
                                         top: 10, bottom: 10),
-                                    child: Text("Rp 18.440.000",
+                                    child: Text(currency.format(pendapatan),
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 12)),
                                   ),
@@ -239,39 +255,6 @@ class _MenuState extends State<Menu> {
                                   ),
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Message Unread (21)",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                              Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  margin: EdgeInsets.only(top: 20, bottom: 20),
-                                  child: ListTile(
-                                    title: Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        "Order #4421 Has Been Sent To the buyer",
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 12),
-                                      ),
-                                    ),
-                                    subtitle: Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        "31 Minutes Ago",
-                                        style: TextStyle(
-                                            color: Color(0xFFC4C4C4),
-                                            fontSize: 10),
-                                      ),
-                                    ),
-                                    trailing: Icon(Icons.more_horiz),
-                                  ))
                             ],
                           ),
                         )
@@ -283,117 +266,6 @@ class _MenuState extends State<Menu> {
                       color: Color(0xFFF8FCFF),
                       padding: EdgeInsets.only(
                           top: 20, bottom: 20, left: 40, right: 40),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Statistics",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 18),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "More",
-                                  style: TextStyle(
-                                      color: Color(0xFFC4C4C4), fontSize: 12),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Card(
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "Orders",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Icon(
-                                              Icons.trending_up,
-                                              color: Color(0xFF059DF1),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "44,216",
-                                          style: TextStyle(
-                                              color: Color(0xFF059DF1),
-                                              fontSize: 12),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              Expanded(
-                                child: Card(
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "Return",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Icon(
-                                              Icons.trending_down,
-                                              color: Color(0xFFFD0000),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "23,124",
-                                          style: TextStyle(
-                                              color: Color(0xFFFD0000),
-                                              fontSize: 12),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
                     ),
                   )
                 ],
@@ -461,12 +333,7 @@ class _MenuState extends State<Menu> {
                               padding: const EdgeInsets.all(6.0),
                               child: GestureDetector(
                                   onTap: () {
-                                    // scanBarcodeNormal();
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          const QrScanPage(),
-                                    ));
+                                    scanBarcodeNormal();
                                   },
                                   child: BuildCard(
                                       Icons.qr_code_2_outlined, "Scan")),
@@ -499,16 +366,33 @@ class _MenuState extends State<Menu> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Image(
-                                      alignment: Alignment.center,
-                                      height: getDiamater(context),
-                                      image:
-                                          AssetImage('assets/images/pic.png')),
-                                  Text(
-                                    "Profile Account",
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white,
+                                  BlocBuilder<ProfileBloc, ProfileState>(
+                                      builder: (context, state) {
+                                    if (state is ProfileUninitialized) {
+                                      return CircularProgressIndicator();
+                                    } else if (state is ProfileLoading) {
+                                      return CircularProgressIndicator();
+                                    } else if (state is ProfileLoaded) {
+                                      return CircleAvatar(
+                                            radius: 50.0,
+                                            backgroundColor: Colors.transparent,
+                                            backgroundImage: NetworkImage(state.salesImage));
+                                    }else{
+                                      return CircleAvatar(
+                                            radius: 50.0,
+                                            backgroundColor: Colors.transparent,
+                                            backgroundImage:
+                                            AssetImage('assets/images/pic.png'));
+                                    }
+                                  }),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 15),
+                                    child: Text(
+                                      "Profile Account",
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -529,7 +413,7 @@ class _MenuState extends State<Menu> {
                                   namaController.text = state.salesName;
                                   emailController.text = state.salesEmail;
                                   telpController.text = state.salesPhone;
-                                  alamatController.text = state.salesCode;
+                                  alamatController.text = state.salesAlamat;
                                   return Container(
                                     margin: EdgeInsets.all(20),
                                     color: const Color(0xFFF9FAFA),
@@ -720,7 +604,7 @@ class _MenuState extends State<Menu> {
                                                                 0xFF0C415F))),
                                                 onPressed: () {
                                                   profileBloc
-                                                      .add(ProfileLoad());
+                                                      .add(ProfileUpdate(name: namaController.text, email: emailController.text, telp: telpController.text, address: alamatController.text));
                                                 },
                                                 child: Container(
                                                   child: Center(
@@ -855,19 +739,21 @@ class _MenuState extends State<Menu> {
                 ),
               ],
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(color: Color(0xFFFD0000), fontSize: 16),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(jam,
-                    style: TextStyle(color: Color(0xFFF43DF3F), fontSize: 12)),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(color: Color(0xFFFD0000), fontSize: 16),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(jam,
+                      style: TextStyle(color: Color(0xFFF43DF3F), fontSize: 12)),
+                ],
+              ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -893,6 +779,14 @@ class _MenuState extends State<Menu> {
       height: 74,
       // color: Colors.white,
       child: TabBar(
+        onTap: (value){
+          if(value==2){
+            loadHistory();
+          }
+          if(value==0){
+            loadDashboard();
+          }
+        },
         labelColor: const Color(0xFFFF5C46),
         unselectedLabelColor: Color(0xFF0C415F),
         indicator: BoxDecoration(

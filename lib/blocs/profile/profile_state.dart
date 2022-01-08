@@ -16,6 +16,7 @@ class ProfileLoaded extends ProfileState{
   String salesEmail;
   String salesPhone;
   String salesCode;
+  String salesAlamat;
   String salesImage;
 
   ProfileLoaded(
@@ -24,6 +25,7 @@ class ProfileLoaded extends ProfileState{
       required this.salesEmail,
       required this.salesPhone,
       required this.salesCode,
+      required this.salesAlamat,
       required this.salesImage});
 
   Map<String, dynamic> toJson() {
@@ -33,6 +35,7 @@ class ProfileLoaded extends ProfileState{
     data['sales_email'] = this.salesEmail;
     data['sales_phone'] = this.salesPhone;
     data['sales_code'] = this.salesCode;
+    data['sales_alamat'] = this.salesAlamat;
     data['sales_image'] = this.salesImage;
     return data;
   }

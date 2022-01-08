@@ -32,6 +32,11 @@ class _StorePageState extends State<StorePage> {
     storeBloc = BlocProvider.of<StoreBloc>(context);
   }
 
+  @override
+  void dispose(){
+    super.dispose();
+  }
+
   Future<void> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -69,6 +74,7 @@ class _StorePageState extends State<StorePage> {
               backgroundColor: Colors.green,
               textColor: Colors.white,
               fontSize: 16.0);
+          Navigator.pop(context);
         }
       },
       child: Scaffold(

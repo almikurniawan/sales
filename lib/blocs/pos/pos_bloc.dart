@@ -9,6 +9,7 @@ class PosBloc extends Bloc<PosEvent, PosState> {
   @override
   Stream<PosState> mapEventToState(PosEvent event) async*{
     // TODO: implement mapEventToState
+    print("event");
     print(event);
     if(event is PosLoadProduct){
       List<Map<String, dynamic>> result = await PosRepository().loadProduct();
@@ -17,8 +18,8 @@ class PosBloc extends Bloc<PosEvent, PosState> {
     else if(event is PosInsert){
       Map<String, dynamic> result = await PosRepository().insertPos(event.productId, event.qty, event.storeId);
       yield PosSuccessInsert(data : result['data']);
-      List<Map<String, dynamic>> res = await PosRepository().loadProduct();
-      yield PosProductLoaded(data: res);
+      // List<Map<String, dynamic>> res = await PosRepository().loadProduct();
+      // yield PosProductLoaded(data: res);
     }
     else{
       yield PosProductUninitialized();

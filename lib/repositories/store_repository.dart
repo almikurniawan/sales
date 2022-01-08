@@ -16,7 +16,6 @@ class StoreRepository {
       HttpHeaders.authorizationHeader: "Bearer " + token
     });
     Map<String, dynamic> jsonObject = jsonDecode(result.body);
-    print(jsonObject);
     List<StoreModel> listStore = jsonObject['data'].map<StoreModel>((item){
       return StoreModel(id: item['id'], name: item['store_name'], image: item['image'], address: item['store_address'], phone: item['store_phone'], owner:  item['store_owner']);
     }).toList();

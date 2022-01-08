@@ -109,10 +109,10 @@ class _ProductPageState extends State<ProductPage> {
                               ProductCard(
                                 id: data[index]['id'],
                                 name: data[index]['product_name'],
-                                price: data[index]['product_price'],
-                                formatPrice: data[index]['product_price'] ?? "",
-                                stock: data[index]['stock'],
-                                formatStock: data[index]['stock'],
+                                price: double.parse(data[index]['product_price'] ?? 0.0),
+                                formatPrice: double.parse(data[index]['product_price'] ?? 0),
+                                stock: data[index]['stock'].toString(),
+                                formatStock: data[index]['stock'].toString(),
                                 urlImage: data[index]['product_image'],
                               ),
                             );

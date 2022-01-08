@@ -10,20 +10,35 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     // TODO: implement mapEventToState
 
-    // if (state is ProfileUninitialized) {
-    //   Map<String, dynamic> jsonProfile =
-    //       await ProfileRepository().loadProfile();
-    //   // yield ProfileLoaded;
-    // } else {
-      if (event is ProfileLoad) {
-        Map<String, dynamic> jsonProfile =
-            await ProfileRepository().loadProfile();
-            
-        yield ProfileLoading();
-        yield ProfileLoaded(salesId: jsonProfile['id'], salesName: jsonProfile['sales_name'], salesEmail: jsonProfile['sales_email'], salesPhone: jsonProfile['sales_phone'], salesCode: jsonProfile['sales_code'], salesImage: jsonProfile['sales_image']);
-      }else{
-        yield ProfileLoading();
-      }
-    // }
+    if (event is ProfileLoad) {
+      Map<String, dynamic> jsonProfile =
+          await ProfileRepository().loadProfile();
+
+      yield ProfileLoading();
+      yield ProfileLoaded(
+          salesId: jsonProfile['id'],
+          salesName: jsonProfile['sales_name'],
+          salesEmail: jsonProfile['sales_email'],
+          salesPhone: jsonProfile['sales_phone'],
+          salesCode: jsonProfile['sales_code'],
+          salesImage: jsonProfile['sales_image'],
+          salesAlamat: jsonProfile['sales_alamat']);
+    } else if (event is ProfileUpdate) {
+      yield ProfileLoading();
+      Map<String, dynamic> jsonProfile =
+          await ProfileRepository().updateProfile(event);
+      Map<String, dynamic> jsonP =
+          await ProfileRepository().loadProfile();
+      yield ProfileLoaded(
+          salesId: jsonP['id'],
+          salesName: jsonP['sales_name'],
+          salesEmail: jsonP['sales_email'],
+          salesPhone: jsonP['sales_phone'],
+          salesCode: jsonP['sales_code'],
+          salesImage: jsonP['sales_image'],
+          salesAlamat: jsonP['sales_alamat']);
+    } else {
+      yield ProfileLoading();
+    }
   }
 }

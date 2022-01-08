@@ -33,7 +33,6 @@ class _StoreListPageState extends State<StoreListPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    storeBloc.close();
   }
 
   @override
