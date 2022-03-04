@@ -38,11 +38,19 @@ class _PosCardState extends State<PosCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.item['name'].toString(),
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600)),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(widget.item['name'].toString(),
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600)),
+                    ),
+                    Text("Stock : "+widget.item['stock'].toString(), style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w800),)
+                  ],
+                ),
                 Row(
                   children: [
                     GestureDetector(child: Icon(Icons.remove), onTap: (){

@@ -121,8 +121,8 @@ class _MenuState extends State<Menu> {
 
     if (!mounted) return;
 
-    Navigator.push(context, MaterialPageRoute(builder: (context){
-      return SalesSelfiPage(barcode : barcodeScanRes); 
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return SalesSelfiPage(barcode: barcodeScanRes);
     }));
 
     // await scanInsert(barcodeScanRes);
@@ -152,7 +152,6 @@ class _MenuState extends State<Menu> {
       length: 4,
       child: Scaffold(
           body: TabBarView(
-            
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -212,7 +211,8 @@ class _MenuState extends State<Menu> {
                                   subtitle: Padding(
                                     padding: const EdgeInsets.only(
                                         top: 10, bottom: 10),
-                                    child: Text(currency.format(pendapatanToday),
+                                    child: Text(
+                                        currency.format(pendapatanToday),
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 12)),
                                   ),
@@ -374,15 +374,16 @@ class _MenuState extends State<Menu> {
                                       return CircularProgressIndicator();
                                     } else if (state is ProfileLoaded) {
                                       return CircleAvatar(
-                                            radius: 50.0,
-                                            backgroundColor: Colors.transparent,
-                                            backgroundImage: NetworkImage(state.salesImage));
-                                    }else{
+                                          radius: 50.0,
+                                          backgroundColor: Colors.transparent,
+                                          backgroundImage:
+                                              NetworkImage(state.salesImage));
+                                    } else {
                                       return CircleAvatar(
-                                            radius: 50.0,
-                                            backgroundColor: Colors.transparent,
-                                            backgroundImage:
-                                            AssetImage('assets/images/pic.png'));
+                                          radius: 50.0,
+                                          backgroundColor: Colors.transparent,
+                                          backgroundImage: AssetImage(
+                                              'assets/images/pic.png'));
                                     }
                                   }),
                                   Padding(
@@ -413,7 +414,8 @@ class _MenuState extends State<Menu> {
                                   namaController.text = state.salesName;
                                   emailController.text = state.salesEmail;
                                   telpController.text = state.salesPhone;
-                                  alamatController.text = state.salesAlamat;
+                                  alamatController.text =
+                                      state.salesAlamat ?? "";
                                   return Container(
                                     margin: EdgeInsets.all(20),
                                     color: const Color(0xFFF9FAFA),
@@ -603,8 +605,13 @@ class _MenuState extends State<Menu> {
                                                             .all(Color(
                                                                 0xFF0C415F))),
                                                 onPressed: () {
-                                                  profileBloc
-                                                      .add(ProfileUpdate(name: namaController.text, email: emailController.text, telp: telpController.text, address: alamatController.text));
+                                                  profileBloc.add(ProfileUpdate(
+                                                      name: namaController.text,
+                                                      email:
+                                                          emailController.text,
+                                                      telp: telpController.text,
+                                                      address: alamatController
+                                                          .text));
                                                 },
                                                 child: Container(
                                                   child: Center(
@@ -751,7 +758,8 @@ class _MenuState extends State<Menu> {
                     height: 20,
                   ),
                   Text(jam,
-                      style: TextStyle(color: Color(0xFFF43DF3F), fontSize: 12)),
+                      style:
+                          TextStyle(color: Color(0xFFF43DF3F), fontSize: 12)),
                 ],
               ),
             ),
@@ -779,11 +787,11 @@ class _MenuState extends State<Menu> {
       height: 74,
       // color: Colors.white,
       child: TabBar(
-        onTap: (value){
-          if(value==2){
+        onTap: (value) {
+          if (value == 2) {
             loadHistory();
           }
-          if(value==0){
+          if (value == 0) {
             loadDashboard();
           }
         },

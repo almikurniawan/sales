@@ -59,13 +59,13 @@ class _ProductCardState extends State<ProductCard> {
                               fontSize: 18,
                               fontWeight: FontWeight.w600)),
                     ),
-                    Expanded(
-                      child: Text(
-                        "Stock : "+widget.stock,
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600),
-                      ),
-                    ),
+                    // Expanded(
+                    //   child: Text(
+                    //     "Stock : "+widget.stock,
+                    //     style: TextStyle(
+                    //         fontSize: 12, fontWeight: FontWeight.w600),
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(

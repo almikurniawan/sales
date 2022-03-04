@@ -149,7 +149,6 @@ class _PosPageState extends State<PosPage> {
                                             const AlwaysScrollableScrollPhysics(),
                                         itemCount: state.data.length,
                                         itemBuilder: (_, index) {
-                                          // return Text("tes");
                                           return Padding(
                                               padding: const EdgeInsets.only(
                                                   bottom: 8),
@@ -160,12 +159,26 @@ class _PosPageState extends State<PosPage> {
                                                   setState(() {});
                                                 },
                                                 onMin: () {
-                                                  state.data[index]['jumlah']--;
-                                                  setState(() {});
+                                                  if(state.data[index]['jumlah']>1){
+                                                    state.data[index]['jumlah']--;
+                                                    setState(() {});
+                                                  }
                                                 },
                                                 onPlus: () {
-                                                  state.data[index]['jumlah']++;
-                                                  setState(() {});
+                                                  if(state.data[index]['jumlah']<state.data[index]['stock']){
+                                                    state.data[index]['jumlah']++;
+                                                    setState(() {});
+                                                  }else{
+                                                    Fluttertoast.showToast(
+                                                      msg: "Stock tidak mencukupi.",
+                                                      toastLength: Toast.LENGTH_LONG,
+                                                      gravity: ToastGravity.CENTER,
+                                                      timeInSecForIosWeb: 1,
+                                                      backgroundColor: Colors.red,
+                                                      textColor: Colors.white,
+                                                      fontSize: 16.0
+                                                    );
+                                                  }
                                                 },
                                               ));
                                         }),
